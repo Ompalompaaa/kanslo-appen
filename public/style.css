@@ -1,0 +1,413 @@
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+}
+
+body {
+ font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+ background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+ min-height: 100vh;
+ color: #4a4a4a;
+}
+
+/* Inloggningsskärm */
+#login-screen {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ min-height: 100vh;
+ background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+}
+
+.login-box {
+ background: white;
+ border-radius: 24px;
+ padding: 40px;
+ text-align: center;
+ box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+ max-width: 360px;
+ width: 90%;
+}
+
+.login-box h1 {
+ font-size: 28px;
+ margin-bottom: 8px;
+ color: #e17055;
+}
+
+.login-box p {
+ color: #888;
+ margin-bottom: 20px;
+}
+
+#name-input {
+ width: 100%;
+ padding: 12px 16px;
+ border: 2px solid #fdcb6e;
+ border-radius: 12px;
+ font-size: 16px;
+ outline: none;
+ transition: border-color 0.2s;
+ margin-bottom: 12px;
+}
+
+#name-input:focus {
+ border-color: #e17055;
+}
+
+#login-btn {
+ background: linear-gradient(135deg, #fdcb6e, #e17055);
+ color: white;
+ border: none;
+ padding: 12px 32px;
+ border-radius: 12px;
+ font-size: 16px;
+ cursor: pointer;
+ transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#login-btn:hover {
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(225, 112, 85, 0.3);
+}
+
+/* Huvudapp */
+#app {
+ max-width: 1000px;
+ margin: 0 auto;
+ padding: 16px;
+}
+
+header {
+ text-align: center;
+ padding: 20px 0 10px;
+}
+
+header h1 {
+ font-size: 28px;
+ color: #e17055;
+}
+
+#status-text {
+ color: #888;
+ font-size: 14px;
+ margin-top: 4px;
+}
+
+.container {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 16px;
+ margin-top: 10px;
+}
+
+/* Kort */
+.card {
+ background: rgba(255,255,255,0.85);
+ backdrop-filter: blur(10px);
+ border-radius: 20px;
+ padding: 20px;
+ box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+ margin-bottom: 16px;
+}
+
+.card h2 {
+ font-size: 18px;
+ margin-bottom: 12px;
+ color: #2d3436;
+}
+
+.daily-sub {
+ color: #888;
+ font-size: 13px;
+ margin-bottom: 12px;
+}
+
+/* ===== DAGSKOLLEN ===== */
+.daily-card {
+ border: 2px solid #fdcb6e;
+ background: rgba(255, 251, 235, 0.9);
+}
+
+.daily-color-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 6px;
+}
+
+.daily-btn {
+ border: none;
+ padding: 10px 6px;
+ border-radius: 12px;
+ font-size: 13px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: transform 0.15s, box-shadow 0.15s;
+ color: #333;
+ text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+ border: 2px solid transparent;
+}
+
+.daily-btn:hover {
+ transform: scale(1.05);
+ box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.daily-btn:active {
+ transform: scale(0.95);
+}
+
+.daily-btn.selected {
+ border-color: #e17055;
+ box-shadow: 0 0 0 3px rgba(225, 112, 85, 0.3);
+}
+
+.daily-confirm {
+ margin-top: 12px;
+ padding: 10px;
+ border-radius: 12px;
+ background: #fff;
+ text-align: center;
+ font-weight: 500;
+ font-size: 14px;
+ animation: fadeIn 0.3s ease;
+}
+
+/* ===== HENS DAG ===== */
+.their-day-card {
+ border: 2px solid #74B9FF;
+ background: rgba(235, 247, 255, 0.9);
+}
+
+.their-day-display {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ padding: 12px;
+ border-radius: 14px;
+ animation: fadeIn 0.4s ease;
+}
+
+.their-day-color {
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ flex-shrink: 0;
+ border: 2px solid rgba(0,0,0,0.1);
+}
+
+.their-day-text {
+ font-size: 15px;
+ font-weight: 500;
+}
+
+.their-day-date {
+ font-size: 12px;
+ color: #888;
+ margin-top: 2px;
+}
+
+/* Färggrid (känn nu) */
+.color-grid {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 8px;
+}
+
+.color-btn {
+ border: none;
+ padding: 12px 8px;
+ border-radius: 14px;
+ font-size: 14px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: transform 0.15s, box-shadow 0.15s;
+ color: #333;
+ text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+}
+
+.color-btn:hover {
+ transform: scale(1.05);
+ box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.color-btn:active {
+ transform: scale(0.95);
+}
+
+/* Pepp-burk */
+.burk-card {
+ text-align: center;
+}
+
+.burk-sub {
+ color: #888;
+ font-size: 13px;
+ margin-bottom: 12px;
+}
+
+#pepp-btn {
+ background: linear-gradient(135deg, #fdcb6e, #e17055);
+ border: none;
+ padding: 16px 32px;
+ border-radius: 50px;
+ cursor: pointer;
+ font-size: 18px;
+ display: inline-flex;
+ align-items: center;
+ gap: 10px;
+ transition: transform 0.2s, box-shadow 0.2s;
+ color: white;
+ font-weight: 600;
+}
+
+#pepp-btn:hover {
+ transform: scale(1.05);
+ box-shadow: 0 6px 20px rgba(225, 112, 85, 0.3);
+}
+
+.burk-emoji {
+ font-size: 28px;
+}
+
+.lapp {
+ margin-top: 16px;
+ background: #fff3e0;
+ border-radius: 16px;
+ padding: 16px;
+ font-size: 16px;
+ color: #e17055;
+ font-weight: 500;
+ animation: fadeIn 0.4s ease;
+ border: 2px dashed #fdcb6e;
+}
+
+.hidden {
+ display: none;
+}
+
+@keyframes fadeIn {
+ from { opacity: 0; transform: translateY(10px); }
+ to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gulliga meddelanden */
+.message-input-row {
+ display: flex;
+ gap: 8px;
+}
+
+#sweet-input {
+ flex: 1;
+ padding: 12px 16px;
+ border: 2px solid #fdcb6e;
+ border-radius: 12px;
+ font-size: 14px;
+ outline: none;
+ transition: border-color 0.2s;
+}
+
+#sweet-input:focus {
+ border-color: #e17055;
+}
+
+#sweet-send-btn {
+ background: linear-gradient(135deg, #fd79a8, #e17055);
+ color: white;
+ border: none;
+ padding: 12px 20px;
+ border-radius: 12px;
+ font-size: 14px;
+ cursor: pointer;
+ font-weight: 600;
+ transition: transform 0.2s;
+ white-space: nowrap;
+}
+
+#sweet-send-btn:hover {
+ transform: scale(1.03);
+}
+
+/* Bubblor */
+.bubblor-card {
+ min-height: 200px;
+}
+
+#bubble-container {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+
+.placeholder-text {
+ color: #ccc;
+ font-style: italic;
+ text-align: center;
+ padding: 20px;
+}
+
+.bubble {
+ padding: 14px 18px;
+ border-radius: 20px;
+ font-size: 15px;
+ font-weight: 500;
+ animation: popIn 0.4s ease;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+ max-width: 100%;
+ word-wrap: break-word;
+}
+
+.bubble-feeling {
+ background: #ffeaa7;
+ color: #2d3436;
+ border: 2px solid #fdcb6e;
+}
+
+.bubble-message {
+ background: #dfe6e9;
+ color: #2d3436;
+ border: 2px solid #b2bec3;
+}
+
+.bubble-message::before {
+ content: "💌 ";
+}
+
+.bubble-sent {
+ font-size: 12px;
+ color: #888;
+ margin-top: 2px;
+}
+
+@keyframes popIn {
+ 0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+ 100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Footer */
+footer {
+ text-align: center;
+ padding: 20px;
+ color: #aaa;
+ font-size: 13px;
+}
+
+/* Mobil */
+@media (max-width: 640px) {
+.container {
+ grid-template-columns: 1fr;
+ }
+
+ header h1 {
+ font-size: 22px;
+ }
+
+.color-grid,.daily-color-grid {
+ grid-template-columns: 1fr 1fr;
+ }
+
+.login-box {
+ padding: 28px;
+ }
+}
