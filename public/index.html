@@ -1,8 +1,8 @@
-<!DOCTYPE hmtl>
+<!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8"
-<meta name="viewport" content="width=device-width", initial-scale="1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>💛 Känslo-appen</title> 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -29,7 +29,7 @@
 <section class="card daily-card">
 <h2> Hur mår du idag älskling</h2>
 <p class="daily-sub">Välj en färg som känns som din dag!</p>
-<div class="daily-color-grid"
+<div class="daily-color-grid">
  <button class="daily-btn" data-color="#FFD700" data-feeling="Glad 😊" style="background:#FFD700;">Glad 😊</button>
  <button class="daily-btn" data-color="#FF9FF3" data-feeling="Kärleksfull 💕" style="background:#FF9FF3;">Kärlek 💕</button>
  <button class="daily-btn" data-color="#74B9FF" data-feeling="Lugn 😌" style="background:#74B9FF;">Lugn 😌</button>
@@ -44,7 +44,7 @@
 
 <section class="card their-day-card">
 <h2> Hens dag</h2>
-<div id="their-day-contaier">
+<div id="their-day-container">
 <p class="placeholder-text">Väntar på att hen ska berätta om sin dag...</p>
 </div>
 </section>
@@ -53,23 +53,23 @@
 <h2> Känn nu</h2>
 <p class="daily-sub">Hur känner du dig just nu? Skicka en bubbla!</p>
 <div class="color-grid">
-<button class="daily-btn" data-color="#FFD700" data-feeling="Glad 😊" style="background:#FFD700;">Glad 😊</button>
-<button class="daily-btn" data-color="#FF9FF3" data-feeling="Kärleksfull 💕" style="background:#FF9FF3;">Kärlek 💕</button>
-<button class="daily-btn" data-color="#74B9FF" data-feeling="Lugn 😌" style="background:#74B9FF;">Lugn 😌</button>
-<button class="daily-btn" data-color="#A8E6CF" data-feeling="Okej 👍" style="background:#A8E6CF;">Okej 👍</button>
-<button class="daily-btn" data-color="#FFB347" data-feeling="Pirrig 🦋" style="background:#FFB347;">Pirrig 🦋</button>
-<button class="daily-btn" data-color="#DDA0DD" data-feeling="Trött 😴" style="background:#DDA0DD;">Trött 😴</button>
-<button class="daily-btn" data-color="#FF6B6B" data-feeling="Stressad 😰" style="background:#FF6B6B;">Stressad 😰</button>
-<button class="daily-btn" data-color="#C9C9C9" data-feeling="Ledsen 😢" style="background:#C9C9C9;">Ledsen 😢</button>
-</div> 
+<button class="color-btn" data-color="#FFD700" data-feeling="Glad 😊" style="background:#FFD700;">Glad 😊</button>
+<button class="color-btn" data-color="#FF9FF3" data-feeling="Kärleksfull 💕" style="background:#FF9FF3;">Kärlek 💕</button>
+<button class="color-btn" data-color="#74B9FF" data-feeling="Lugn 😌" style="background:#74B9FF;">Lugn 😌</button>
+<button class="color-btn" data-color="#A8E6CF" data-feeling="Okej 👍" style="background:#A8E6CF;">Okej 👍</button>
+<button class="color-btn" data-color="#FFB347" data-feeling="Pirrig 🦋" style="background:#FFB347;">Pirrig 🦋</button>
+<button class="color-btn" data-color="#DDA0DD" data-feeling="Trött 😴" style="background:#DDA0DD;">Trött 😴</button>
+<button class="color-btn" data-color="#FF6B6B" data-feeling="Stressad 😰" style="background:#FF6B6B;">Stressad 😰</button>
+<button class="color-btn" data-color="#C9C9C9" data-feeling="Ledsen 😢" style="background:#C9C9C9;">Ledsen 😢</button>
+</div>
 </section> 
 
 <section class="card burk-card">
 <h2> Pepp-burken</h2>
 <p class="burk-sub">Klicka på burjeb för en gullig lapp!</p>
 <button id="pepp-btn">
-<span class="burk-empoji">🏺</span>
-<span calss="burk-text">Ta en lapp!</span>
+<span class="burk-emoji">🏺</span>
+<span class="burk-text">Ta en lapp!</span>
 </button>
 <div id="pepp-lapp" class="lapp hidden"></div>
 </section>
@@ -80,7 +80,7 @@
 <section class="card">
 <h2> Skicka nåt gulligt</h2>
 <div class="message-input-row">
-<input type="text" id="sweet-input" placeholder="Skriv nått sött..." maxlenght="200">
+<input type="text" id="sweet-input" placeholder="Skriv nått sött..." maxlength="200">
 <button id="sweet-send-btn">Skicka</button>
 </div>
 </section>
@@ -99,7 +99,7 @@
 </footer>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.52.1/dist/umd/supabase.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

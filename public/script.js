@@ -1,4 +1,10 @@
-const socket = io();
+// ===== SUPABASE SETUP =====
+// Fill these in from your Supabase project: Settings > API
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===== PEPP-LAPPAR =====
 const peppLappar = [
@@ -26,6 +32,7 @@ const peppLappar = [
 
 // ===== INLOGGNING =====
 let myName = '';
+let room = null;
 
 document.getElementById('login-btn').addEventListener('click', () => {
   const name = document.getElementById('name-input').value.trim();
@@ -34,19 +41,59 @@ document.getElementById('login-btn').addEventListener('click', () => {
     return;
   }
   myName = name;
-  socket.emit('set-name', myName);
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('status-text').textContent = `Du är här som ${myName} 💕`;
+  initRealtime();
+  loadTheirDay();
 });
 
 document.getElementById('name-input').addEventListener('keypress', (e) => {
  if (e.key === 'Enter') document.getElementById('login-btn').click();
 });
 
+// ===== REALTIME KANAL (bubblor + meddelanden) =====
+function initRealtime() {
+  room = db.channel('kanslo-room', {
+    config: { broadcast: { self: false } }
+  });
+
+  room.on('broadcast', { event: 'color-feeling' }, ({ payload }) => {
+    renderBubble('bubble-feeling', `<strong>${payload.name}</strong> känner sig: ${payload.feeling}`, payload.color);
+  });
+
+  room.on('broadcast', { event: 'sweet-message' }, ({ payload }) => {
+    renderBubble('bubble-message', `<strong>${payload.name}</strong> säger: ${payload.text}`);
+  });
+
+  room.subscribe();
+
+  // Dagskänslor: lyssna på ändringar i tabellen och visa hens senaste
+  db.channel('daily-feelings-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'daily_feelings' }, (payload) => {
+      if (payload.new && payload.new.name !== myName) {
+        showTheirDay(payload.new);
+      }
+    })
+    .subscribe();
+}
+
+async function loadTheirDay() {
+  const { data, error } = await db
+    .from('daily_feelings')
+    .select('*')
+    .neq('name', myName)
+    .order('updated_at', { ascending: false })
+    .limit(1);
+
+  if (!error && data && data.length > 0) {
+    showTheirDay(data[0]);
+  }
+}
+
 // ===== DAGSKOLLEN =====
 document.querySelectorAll('.daily-btn').forEach(btn => {
- btn.addEventListener('click', () => {
+ btn.addEventListener('click', async () => {
  const color = btn.dataset.color;
  const feeling = btn.dataset.feeling;
 
@@ -55,10 +102,16 @@ document.querySelectorAll('.daily-btn').forEach(btn => {
  btn.classList.add('selected');
 
  // Spara dagens datum (ISO-format, bara datum)
- const today = new Date().toISOString().split('T');
+ const today = new Date().toISOString().split('T')[0];
 
- // Skicka till servern
- socket.emit('daily-feeling', { color, feeling, date: today });
+ // Spara till Supabase
+ await db.from('daily_feelings').upsert({
+   name: myName,
+   color,
+   feeling,
+   date: today,
+   updated_at: new Date().toISOString()
+ });
 
  // Visa bekräftelse
  const confirmEl = document.getElementById('daily-confirm');
@@ -69,8 +122,8 @@ document.querySelectorAll('.daily-btn').forEach(btn => {
  });
 });
 
-// ===== HENS DAG (ta emot) =====
-socket.on('daily-feeling-update', (data) => {
+// ===== HENS DAG (visa) =====
+function showTheirDay(data) {
  const container = document.getElementById('their-day-container');
 
  container.innerHTML = `
@@ -82,7 +135,7 @@ socket.on('daily-feeling-update', (data) => {
  </div>
  </div>
  `;
-});
+}
 
 // ===== FÄRGBUBBLOR (realtid) =====
 document.querySelectorAll('.color-btn').forEach(btn => {
@@ -90,32 +143,9 @@ document.querySelectorAll('.color-btn').forEach(btn => {
  const color = btn.dataset.color;
  const feeling = btn.dataset.feeling;
 
- socket.emit('color-feeling', { color, feeling });
+ room.send({ type: 'broadcast', event: 'color-feeling', payload: { name: myName, color, feeling } });
  showLocalConfirm(`Du känner dig just nu: ${feeling} 💛`);
  });
-});
-
-socket.on('color-feeling', (data) => {
-const container = document.getElementById('bubble-container');
-const placeholder = container.querySelector('.placeholder-text');
-if (placeholder) placeholder.remove();
-
-const bubble = document.createElement('div');
-bubble.className = 'bubble bubble-feeling';
-bubble.style.borderColor = data.color;
-bubble.style.background = lightenColor(data.color, 40);
-bubble.innerHTML = `<strong>${data.name}</strong> känner sig: ${data.feeling}`;
-
-const time = document.createElement('div');
-time.className = 'bubble-sent';
-time.textContent = `för en stund sedan`;
-bubble.appendChild(time);
-
-container.prepend(bubble);
-
-while (container.children.length > 20) {
-container.lastChild.remove();
-}
 });
 
 // ===== GULLIGA MEDDELANDEN =====
@@ -129,19 +159,24 @@ const input = document.getElementById('sweet-input');
 const msg = input.value.trim();
 if (msg === '') return;
 
-socket.emit('sweet-message', msg);
+room.send({ type: 'broadcast', event: 'sweet-message', payload: { name: myName, text: msg } });
 showLocalConfirm(`💌 Du skickade: "${msg}"`);
 input.value = '';
 }
 
-socket.on('sweet-message', (data) => {
+// ===== BUBBLOR (delad rendering) =====
+function renderBubble(className, html, color) {
 const container = document.getElementById('bubble-container');
 const placeholder = container.querySelector('.placeholder-text');
 if (placeholder) placeholder.remove();
 
 const bubble = document.createElement('div');
-bubble.className = 'bubble bubble-message';
-bubble.innerHTML = `<strong>${data.name}</strong> säger: ${data.text}`;
+bubble.className = `bubble ${className}`;
+if (color) {
+  bubble.style.borderColor = color;
+  bubble.style.background = lightenColor(color, 40);
+}
+bubble.innerHTML = html;
 
 const time = document.createElement('div');
 time.className = 'bubble-sent';
@@ -153,19 +188,16 @@ container.prepend(bubble);
 while (container.children.length > 20) {
 container.lastChild.remove();
 }
-});
+}
 
 // ===== PEPP-BURK =====
 document.getElementById('pepp-btn').addEventListener('click', () => {
 const randomIndex = Math.floor(Math.random() * peppLappar.length);
-const lapp = peppLapparrandomIndex;
+const lapp = peppLappar[randomIndex];
 
 const lappEl = document.getElementById('pepp-lapp');
 lappEl.textContent = `💌 ${lapp}`;
 lappEl.classList.remove('hidden');
-
-
-socket.emit('pepp-click');
 });
 
 // ===== HJÄLPFUNKTIONER =====
